@@ -25,6 +25,18 @@ enum TransactionType {
     Other,
 }
 
+#[derive(PartialEq, Debug, Deserialize)]
+#[serde(rename_all = "UPPERCASE")]
+enum Asset {
+    Usd,
+    Gbp,
+    Usdc,
+    Btc,
+    Sol,
+    #[serde(other)]
+    Other,
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct Transaction {
@@ -35,7 +47,7 @@ struct Transaction {
     r#type: TransactionType,
     subtype: String,
     aclass: String,
-    asset: String,
+    asset: Asset,
     wallet: String,
     amount: f64,
     fee: f64,
