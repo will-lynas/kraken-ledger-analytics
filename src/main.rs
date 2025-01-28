@@ -45,7 +45,7 @@ struct Transaction {
     #[serde(deserialize_with = "deserialize_datetime")]
     time: DateTime<Utc>,
     r#type: TransactionType,
-    subtype: String,
+    // subtype: String,
     aclass: String,
     asset: Asset,
     wallet: String,
