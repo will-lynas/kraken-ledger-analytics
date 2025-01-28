@@ -104,16 +104,25 @@ fn main() -> Result<()> {
         }
     }
 
+    let mut rollover_fees = 0.;
+    let mut opening_fees = 0.;
+
     for (refid, position) in positions {
+        opening_fees += position.open.fee;
+        rollover_fees += position.rollover_sum();
         println!(
-            "{:?}\nRollovers: {:?} (sum {:?})\nOpen fee: {:?}\n",
+            "{:?}\nRollovers: {:?} (sum {:?})\nOpen fee: {:?}\nTotal fee: {:?}\n",
             refid,
             position.rollovers.len(),
             position.rollover_sum(),
             position.open.fee,
+            position.rollover_sum() + position.open.fee
         );
         println!();
     }
+    println!("Total rollover fees: {rollover_fees}");
+    println!("Total opening fees: {opening_fees}");
+    println!("Total fees: {}", rollover_fees + opening_fees);
 
     // println!("{margins:#?}");
 
