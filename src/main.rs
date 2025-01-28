@@ -124,7 +124,5 @@ fn main() -> Result<()> {
     println!("Total opening fees: {opening_fees:.2}");
     println!("Total fees: {:.2}", rollover_fees + opening_fees);
 
-    // println!("{margins:#?}");
-
     Ok(())
 }
