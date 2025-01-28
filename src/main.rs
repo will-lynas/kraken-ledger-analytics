@@ -9,7 +9,6 @@ use serde::{de, Deserialize, Deserializer};
 #[derive(Clone, Debug, Deserialize)]
 struct TxId(String);
 
-#[allow(dead_code)]
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Deserialize)]
 struct RefId(String);
 
