@@ -68,7 +68,6 @@ where
 #[derive(Debug)]
 struct Position {
     open: Transaction,
-    close: Option<Transaction>,
     rollovers: Vec<Transaction>,
 }
 
@@ -83,19 +82,13 @@ fn main() -> Result<()> {
     for transaction in transactions {
         match transaction.r#type {
             TransactionType::Margin => {
-                if let Some(position) = positions.get_mut(&transaction.refid) {
-                    assert!(position.close.is_none());
-                    position.close = Some(transaction.clone());
-                } else {
-                    positions.insert(
-                        transaction.refid.clone(),
-                        Position {
-                            open: transaction.clone(),
-                            close: None,
-                            rollovers: Vec::new(),
-                        },
-                    );
-                }
+                positions.insert(
+                    transaction.refid.clone(),
+                    Position {
+                        open: transaction.clone(),
+                        rollovers: Vec::new(),
+                    },
+                );
             }
             TransactionType::Rollover => {
                 let position = positions.get_mut(&transaction.refid).unwrap();
@@ -105,7 +98,16 @@ fn main() -> Result<()> {
         }
     }
 
-    dbg!(positions);
+    for (refid, position) in positions {
+        println!(
+            "{:?}\nRollovers: {:?} (sum {:?})\nOpen fee: {:?}\n",
+            refid,
+            position.rollovers.len(),
+            position.rollovers.iter().map(|t| t.fee).sum::<f64>(),
+            position.open.fee,
+        );
+        println!();
+    }
 
     // println!("{margins:#?}");
 
