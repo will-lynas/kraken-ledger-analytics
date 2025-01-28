@@ -5,6 +5,18 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use csv::ReaderBuilder;
 use serde::{de, Deserialize, Deserializer};
 
+#[derive(PartialEq, Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum TransactionType {
+    Deposit,
+    Trade,
+    Margin,
+    Rollover,
+    Withdrawal,
+    #[serde(other)]
+    Other,
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct Transaction {
@@ -12,7 +24,7 @@ struct Transaction {
     refid: String,
     #[serde(deserialize_with = "deserialize_datetime")]
     time: DateTime<Utc>,
-    r#type: String,
+    r#type: TransactionType,
     subtype: String,
     aclass: String,
     asset: String,
@@ -38,7 +50,9 @@ fn main() -> Result<()> {
 
     for result in rdr.deserialize() {
         let transaction: Transaction = result?;
-        println!("{:?}", transaction);
+        if transaction.r#type == TransactionType::Deposit {
+            println!("{:?} {:?}", transaction.amount, transaction.asset);
+        }
     }
 
     Ok(())
