@@ -71,6 +71,12 @@ struct Position {
     rollovers: Vec<Transaction>,
 }
 
+impl Position {
+    fn rollover_sum(&self) -> f64 {
+        self.rollovers.iter().map(|t| t.fee).sum()
+    }
+}
+
 fn main() -> Result<()> {
     let file = File::open("input/ledgers.csv")?;
     let mut rdr = ReaderBuilder::new().has_headers(true).from_reader(file);
@@ -103,7 +109,7 @@ fn main() -> Result<()> {
             "{:?}\nRollovers: {:?} (sum {:?})\nOpen fee: {:?}\n",
             refid,
             position.rollovers.len(),
-            position.rollovers.iter().map(|t| t.fee).sum::<f64>(),
+            position.rollover_sum(),
             position.open.fee,
         );
         println!();
