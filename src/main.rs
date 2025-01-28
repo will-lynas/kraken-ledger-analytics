@@ -48,7 +48,7 @@ struct Transaction {
     // subtype: String,
     // aclass: String,
     asset: Asset,
-    wallet: String,
+    // wallet: String,
     amount: f64,
     fee: f64,
     balance: f64,
