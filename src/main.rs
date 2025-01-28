@@ -5,6 +5,14 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use csv::ReaderBuilder;
 use serde::{de, Deserialize, Deserializer};
 
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct TxId(String);
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct RefId(String);
+
 #[derive(PartialEq, Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum TransactionType {
@@ -20,8 +28,8 @@ enum TransactionType {
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct Transaction {
-    txid: String,
-    refid: String,
+    txid: TxId,
+    refid: RefId,
     #[serde(deserialize_with = "deserialize_datetime")]
     time: DateTime<Utc>,
     r#type: TransactionType,
@@ -48,12 +56,8 @@ fn main() -> Result<()> {
     let file = File::open("input/ledgers.csv")?;
     let mut rdr = ReaderBuilder::new().has_headers(true).from_reader(file);
 
-    for result in rdr.deserialize() {
-        let transaction: Transaction = result?;
-        if transaction.r#type == TransactionType::Deposit {
-            println!("{:?} {:?}", transaction.amount, transaction.asset);
-        }
-    }
+    let transactions: Vec<Transaction> = rdr.deserialize().map(|t| t.unwrap()).collect();
+    dbg!(transactions);
 
     Ok(())
 }
