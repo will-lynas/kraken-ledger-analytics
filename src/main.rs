@@ -46,7 +46,7 @@ struct Transaction {
     time: DateTime<Utc>,
     r#type: TransactionType,
     // subtype: String,
-    aclass: String,
+    // aclass: String,
     asset: Asset,
     wallet: String,
     amount: f64,
